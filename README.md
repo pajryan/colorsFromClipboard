@@ -1,6 +1,7 @@
 
 
-## Goal of this is to have a simple electron app that will allow me to paste an image from the clipboard and automatically identify all the colors in that image.
+## Colors from Clipboard
+Goal of this is to have a simple electron app that will allow me to paste an image from the clipboard and automatically identify all the colors in that image.
 
  - [ ] paste from clipboard, display image
  - [ ] list colors used
