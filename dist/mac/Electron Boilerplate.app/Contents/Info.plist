@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>BuildMachineOSBuild</key>
+    <string>16G29</string>
+    <key>CFBundleDisplayName</key>
+    <string>Electron Boilerplate</string>
+    <key>CFBundleExecutable</key>
+    <string>Electron Boilerplate</string>
+    <key>CFBundleIconFile</key>
+    <string>Electron Boilerplate.icns</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.example.electron-boilerplate</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>Electron Boilerplate</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>0.0.0</string>
+    <key>CFBundleVersion</key>
+    <string>0.0.0</string>
+    <key>DTSDKBuild</key>
+    <string>14D125</string>
+    <key>DTSDKName</key>
+    <string>macosx10.1010.10</string>
+    <key>DTXcode</key>
+    <string>0821</string>
+    <key>DTXcodeBuild</key>
+    <string>8C1002</string>
+    <key>LSApplicationCategoryType</key>
+    <string>public.app-category.developer-tools</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>10.9.0</string>
+    <key>NSHighResolutionCapable</key>
+    <true/>
+    <key>NSMainNibFile</key>
+    <string>MainMenu</string>
+    <key>NSPrincipalClass</key>
+    <string>AtomApplication</string>
+    <key>NSSupportsAutomaticGraphicsSwitching</key>
+    <true/>
+    <key>NSHumanReadableCopyright</key>
+    <string>Copyright © 2018 Mr. Gumby</string>
+    <key>AsarIntegrity</key>
+    <string>{"checksums":{"app.asar":"k65rfTVovXIY3kRT4Rvk8yXVams6Pdz5cNlvtMJ3ENObzb06LXMd9QHGhrA5cVQT6p7DQzidr529MNTfZS8Zxg==","electron.asar":"N8qMkArPe2Vz78otrpXE3aNxOfCVyD1sqLzLTkMM5HY6Di2N/zv+HQhnv0+XjE/PttdJYymWUm+D0oj39WbLiA=="}}</string>
+  </dict>
+</plist>

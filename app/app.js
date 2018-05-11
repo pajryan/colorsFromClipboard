@@ -101,9 +101,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_electron___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_electron__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_fs_jetpack__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_fs_jetpack___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_fs_jetpack__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__hello_world_hello_world__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_env__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_env___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_env__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_env__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_env___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_env__);
  // Small helpers you might want to keep
 
 
@@ -114,23 +113,94 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-
 const app = __WEBPACK_IMPORTED_MODULE_3_electron__["remote"].app;
-const appDir = __WEBPACK_IMPORTED_MODULE_4_fs_jetpack___default.a.cwd(app.getAppPath()); // Holy crap! This is browser window with HTML and stuff, but I can read
+const appDir = __WEBPACK_IMPORTED_MODULE_4_fs_jetpack___default.a.cwd(app.getAppPath()); // const RGBaster = require('rgbaster');
+// Holy crap! This is browser window with HTML and stuff, but I can read
 // files from disk like it's node.js! Welcome to Electron world :)
 
 const manifest = appDir.read("package.json", "json");
-const osMap = {
-  win32: "Windows",
-  darwin: "macOS",
-  linux: "Linux"
-};
-document.querySelector("#app").style.display = "block";
-document.querySelector("#greet").innerHTML = Object(__WEBPACK_IMPORTED_MODULE_5__hello_world_hello_world__["a" /* greet */])();
-document.querySelector("#os").innerHTML = osMap[process.platform];
-document.querySelector("#author").innerHTML = manifest.author;
-document.querySelector("#env").innerHTML = __WEBPACK_IMPORTED_MODULE_6_env___default.a.name;
-document.querySelector("#electron-version").innerHTML = process.versions.electron;
+
+const pasteImage = __webpack_require__(17);
+
+const extractColors = __webpack_require__(20);
+
+const _ = __webpack_require__(21);
+
+const rgb2hex = __webpack_require__(22);
+
+const {
+  clipboard
+} = __webpack_require__(0); // Listen for all image paste events on a page
+
+
+pasteImage.on('paste-image', function (source) {
+  //clear existing
+  let tgt = document.getElementById("img");
+  tgt.innerHTML = ""; // console.log("returned:", source)
+
+  var pastedImage = new Image();
+  pastedImage.id = "pastedImage";
+
+  pastedImage.onload = function () {
+    // Have the image loaded, get colors
+    getImageColors(); // self.emit('paste-image', pastedImage);
+  };
+
+  pastedImage.src = source;
+  tgt.appendChild(pastedImage);
+});
+
+function getImageColors() {
+  var img = document.getElementById('pastedImage');
+  extractColors.colors(img, {
+    success: function (payload) {
+      let cc = [];
+
+      for (let itm in payload.colors) {
+        cc.push({
+          rgb: itm,
+          count: payload.colors[itm]
+        });
+      }
+
+      cc = cc.filter(o => o.count > 0);
+      cc = _.orderBy(cc, ["count"], ['desc']);
+      buildcolorUI(cc);
+    }
+  });
+}
+
+function buildcolorUI(cc) {
+  var ch = document.getElementById("colorInfo");
+  document.getElementById("clipText").style.display = "block";
+  cc.forEach((c, i) => {
+    var dv = document.createElement("div");
+    dv.className = "keyWrap";
+    var kb = document.createElement("div");
+    kb.className = "keyBox";
+    kb.style.background = "rgb(" + c.rgb + ")";
+    dv.appendChild(kb);
+    var rgbStr = "rgb(" + c.rgb + ")";
+    var spn = document.createElement("span");
+    var spnH = document.createElement("span");
+    spnH.className = "hex";
+    var spnR = document.createElement("span");
+    spnR.className = "rgb";
+    spnH.innerHTML = rgb2hex(rgbStr).hex;
+    spnR.innerHTML = "rgb(" + c.rgb + ")";
+    spn.appendChild(spnH);
+    spn.appendChild(spnR);
+    spn.className = "keyText";
+    dv.appendChild(spn);
+    spnH.addEventListener('click', e => {
+      clipboard.writeText(e.target.innerHTML);
+    });
+    spnR.addEventListener('click', e => {
+      clipboard.writeText(e.target.innerHTML);
+    });
+    ch.appendChild(dv);
+  });
+}
 
 /***/ }),
 /* 10 */
@@ -172,7 +242,7 @@ exports = module.exports = __webpack_require__(12)(false);
 
 
 // module
-exports.push([module.i, "html,\nbody {\n  width: 100%;\n  height: 100%;\n  margin: 0;\n  padding: 0;\n}\n\nbody {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  font-family: sans-serif;\n  color: #525252;\n}\n\na {\n  text-decoration: none;\n  color: #cb3837;\n}\n\n.container {\n  text-align: center;\n}\n", ""]);
+exports.push([module.i, "html,\nbody {\n  width: 100%;\n  height: 100%;\n  margin: 0;\n  padding: 30px;\n}\n\nbody {\n  font-family: sans-serif;\n  color: #525252;\n}\n\na {\n  text-decoration: none;\n  color: #cb3837;\n}\n\n#colorInfo {\n  height: 200px;\n  overflow: auto;\n  display: flex;\n  flex-direction: column;\n  flex-wrap: wrap;\n}\n\n  .keyWrap{\n    padding:4px;\n  }\n\n    .keyBox{\n      width: 20px;\n      height: 20px;\n      float:left;\n      border: 1px solid #ccc;\n    }\n\n\n\n    .keyText{\n      font-size: 0.8em;\n      padding-left:8px;\n      font-family: 'Courier New', Courier, monospace;\n    }\n\n    .keyText .hex{\n\n    }\n\n    .keyText .rgb{\n      color:#666;\n      padding-left: 10px;\n      padding-right: 10px;\n    }\n\n#img{\n  padding-top:30px;\n  border-top: 1px solid #333;\n  text-align: center;\n}    ", ""]);
 
 // exports
 
@@ -835,19 +905,291 @@ document.addEventListener("click", supportExternalLinks, false);
 
 /***/ }),
 /* 17 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-const greet = () => {
-  return "Hello World!";
-};
-/* harmony export (immutable) */ __webpack_exports__["a"] = greet;
+ //PR pulled from: https://github.com/redgeoff/paste-image
+// This code is heavily based on Joel Basada's great work at
+// http://joelb.me/blog/2011/code-snippet-accessing-clipboard-images-with-javascript/
 
-const bye = () => {
-  return "See ya!";
-};
-/* unused harmony export bye */
+var inherits = __webpack_require__(18),
+    events = __webpack_require__(19);
 
+var PasteImage = function () {
+  this._initialized = false;
+
+  this._wrapEmitterFns();
+};
+
+inherits(PasteImage, events.EventEmitter); // We want to wrap emitter functions so that we can ensure that we have initialized the document
+// listeners before listening to any paste events
+
+PasteImage.prototype._wrapEmitterFns = function () {
+  var self = this,
+      fns = ['on', 'once'];
+  fns.forEach(function (fn) {
+    PasteImage.prototype[fn] = function () {
+      if (!self._initialized) {
+        self._init();
+      }
+
+      return events.EventEmitter.prototype[fn].apply(self, arguments);
+    };
+  });
+};
+
+PasteImage.prototype._clipboardSupported = function () {
+  return window.Clipboard;
+};
+
+PasteImage.prototype._pasteCatcherFocus = function () {
+  this._pasteCatcher.focus();
+};
+
+PasteImage.prototype._listenForClick = function () {
+  var self = this; // Make sure it is always in focus. We ignore code coverage for this area as there does not appear
+  // to be an easy cross-browser way of triggering a click event on the document
+  //
+
+  /* istanbul ignore next */
+
+  document.addEventListener('click', function () {
+    self._pasteCatcherFocus();
+  });
+};
+
+PasteImage.prototype._createPasteCatcherIfNeeded = function () {
+  // We start by checking if the browser supports the Clipboard object. If not, we need to create a
+  // contenteditable element that catches all pasted data
+  if (!this._clipboardSupported()) {
+    this._pasteCatcher = document.createElement('div'); // Firefox allows images to be pasted into contenteditable elements
+
+    this._pasteCatcher.setAttribute('contenteditable', ''); // We can hide the element and append it to the body,
+
+
+    this._pasteCatcher.style.opacity = 0; // Use absolute positioning so that the paste catcher doesn't take up extra space. Note: we
+    // cannot set style.display='none' as this will disable the functionality.
+
+    this._pasteCatcher.style.position = 'absolute';
+    document.body.appendChild(this._pasteCatcher);
+
+    this._pasteCatcher.focus();
+
+    this._listenForClick();
+  }
+};
+
+PasteImage.prototype._listenForPaste = function () {
+  var self = this; // Add the paste event listener. We ignore code coverage for this area as there does not appear to
+  // be a cross-browser way of triggering a pase event
+  //
+
+  /* istanbul ignore next */
+
+  window.addEventListener('paste', function (e) {
+    self._pasteHandler(e);
+  });
+};
+
+PasteImage.prototype._init = function () {
+  this._createPasteCatcherIfNeeded();
+
+  this._listenForPaste();
+
+  this._initialized = true;
+};
+
+PasteImage.prototype._checkInputOnNextTick = function () {
+  var self = this; // This is a cheap trick to make sure we read the data AFTER it has been inserted.
+
+  setTimeout(function () {
+    self._checkInput();
+  }, 1);
+};
+
+PasteImage.prototype._pasteHandler = function (e) {
+  // Starting to paste image
+  this.emit('pasting-image', e); // We need to check if event.clipboardData is supported (Chrome)
+
+  if (e.clipboardData && e.clipboardData.items) {
+    // Get the items from the clipboard
+    var items = e.clipboardData.items; // Loop through all items, looking for any kind of image
+
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].type.indexOf('image') !== -1) {
+        // We need to represent the image as a file
+        var blob = items[i].getAsFile(); // Use a URL or webkitURL (whichever is available to the browser) to create a temporary URL
+        // to the object
+
+        var URLObj = this._getURLObj();
+
+        var source = URLObj.createObjectURL(blob); // The URL can then be used as the source of an image
+
+        this._createImage(source);
+      } else {
+        document.getElementById("img").innerHTML = "you didn't paste an image... looks like it was <b>" + items[i].type + "</b>";
+      }
+    } // If we can't handle clipboard data directly (Firefox), we need to read what was pasted from
+    // the contenteditable element
+
+  } else {
+    this._checkInputOnNextTick();
+  }
+};
+
+PasteImage.prototype._getURLObj = function () {
+  return window.URL || window.webkitURL;
+}; // Parse the input in the paste catcher element
+
+
+PasteImage.prototype._checkInput = function () {
+  // Store the pasted content in a variable
+  var child = this._pasteCatcher.childNodes[0]; // Clear the inner html to make sure we're always getting the latest inserted content
+
+  this._pasteCatcher.innerHTML = '';
+
+  if (child) {
+    // If the user pastes an image, the src attribute will represent the image as a base64 encoded
+    // string.
+    if (child.tagName === 'IMG') {
+      this._createImage(child.src);
+    }
+  }
+}; // Creates a new image from a given source
+
+
+PasteImage.prototype._createImage = function (source) {
+  var self = this; //PR - want to return the blob
+
+  self.emit('paste-image', source); //PR below returns an image
+  // var pastedImage = new Image();
+  // pastedImage.onload = function () {
+  //   // You now have the image!
+  //   self.emit('paste-image', pastedImage);
+  // };
+  // pastedImage.src = source;
+};
+
+module.exports = new PasteImage();
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports) {
+
+module.exports = require("inherits");
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports) {
+
+module.exports = require("events");
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+ // Helper functions.
+
+var getContext = function (imgObj) {
+  let cv = document.createElement("canvas");
+  cv.width = imgObj.width;
+  cv.height = imgObj.height; // document.body.appendChild(cv)
+
+  return cv.getContext('2d');
+};
+
+var getImageData = function (img, loaded) {
+  var imgObj = new Image();
+  var imgSrc = img.src || img; // Can't set cross origin to be anonymous for data url's
+  // https://github.com/mrdoob/three.js/issues/1305
+
+  if (imgSrc.substring(0, 5) !== 'data:') imgObj.crossOrigin = "Anonymous";
+
+  imgObj.onload = function () {
+    var context = getContext(imgObj);
+    context.drawImage(imgObj, 0, 0);
+    var imageData = context.getImageData(0, 0, imgObj.width, imgObj.height);
+    loaded && loaded(imageData.data);
+  };
+
+  imgObj.src = imgSrc;
+};
+
+var makeRGB = function (name) {
+  return ['rgb(', name, ')'].join('');
+};
+
+var mapPalette = function (palette) {
+  return palette.map(function (c) {
+    return makeRGB(c.name);
+  });
+}; // RGBaster Object
+// ---------------
+//
+
+
+var BLOCKSIZE = 5;
+
+var RGBaster = function () {};
+
+RGBaster.prototype.colors = function (img, opts) {
+  opts = opts || {};
+  var exclude = opts.exclude || []; // for example, to exclude white and black:  [ '0,0,0', '255,255,255' ]
+
+  getImageData(img, function (data) {
+    var length = data.length,
+        //( img.width * img.height ) || data.length,
+    colors = {},
+        rgb = [],
+        rgbString = ""; // Loop over all pixels, in BLOCKSIZE iterations.
+
+    var i = 0;
+
+    while (i < length) {
+      rgb[0] = data[i];
+      rgb[1] = data[i + 1];
+      rgb[2] = data[i + 2];
+      rgbString = rgb.join(","); // skip undefined data
+
+      if (rgb.indexOf(undefined) !== -1) {
+        // Increment!
+        i += BLOCKSIZE * 4;
+        continue;
+      } // Keep track of counts.
+
+
+      if (rgbString in colors) {
+        colors[rgbString] = colors[rgbString] + 1;
+      } else {
+        colors[rgbString] = 1;
+      } // Increment!
+
+
+      i += BLOCKSIZE * 4;
+    }
+
+    if (opts.success) {
+      opts.success({
+        colors: colors
+      });
+    }
+  });
+};
+
+module.exports = new RGBaster();
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports) {
+
+module.exports = require("lodash");
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports) {
+
+module.exports = require("rgb2hex");
 
 /***/ })
 /******/ ]);

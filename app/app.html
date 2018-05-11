@@ -6,20 +6,10 @@
 </head>
 <body>
 
-  <div id="app" class="container" style="display: none;">
-    <h1 id="greet"></h1>
-    <p>
-      Welcome to <a href="http://electron.atom.io" class="js-external-link">Electron</a> app running on this <strong id="os"></strong> machine.
-    </p>
-    <p>
-      App author: <strong id="author"></strong>
-    </p>
-    <p>
-      Environment: <strong id="env"></strong>
-    </p>
-    <p>
-      Electron version: <strong id="electron-version"></strong>
-    </p>
+  <div id="app" class="container">
+    <p id="clipText" style="display:none;">click a hex or rgb to copy to your clipboard</p>
+    <div id="colorInfo"></div>
+    <div id="img">Paste (ctrl-V) an image (png, gif, jpg)</div>
   </div>
 
   <script src="app.js"></script>

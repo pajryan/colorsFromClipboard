@@ -3,13 +3,10 @@ body {
   width: 100%;
   height: 100%;
   margin: 0;
-  padding: 0;
+  padding: 30px;
 }
 
 body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   font-family: sans-serif;
   color: #525252;
 }
@@ -19,6 +16,45 @@ a {
   color: #cb3837;
 }
 
-.container {
-  text-align: center;
+#colorInfo {
+  height: 200px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
 }
+
+  .keyWrap{
+    padding:4px;
+  }
+
+    .keyBox{
+      width: 20px;
+      height: 20px;
+      float:left;
+      border: 1px solid #ccc;
+    }
+
+
+
+    .keyText{
+      font-size: 0.8em;
+      padding-left:8px;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    .keyText .hex{
+
+    }
+
+    .keyText .rgb{
+      color:#666;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+
+#img{
+  padding-top:30px;
+  border-top: 1px solid #333;
+  text-align: center;
+}    
