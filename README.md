@@ -16,8 +16,8 @@ Goal of this is to have a simple electron app that will allow me to paste an ima
 ## run
 `npm start`
 
-
+## notes
 Starting with electron boilerplate: https://github.com/szwacz/electron-boilerplate
 
-
+For some reason, this all works prefectly when run locally.  When I bundle the app into an executable `pasting` doesn't work.  I'm sure it's an electron setting, but haven't messed with it.
 
